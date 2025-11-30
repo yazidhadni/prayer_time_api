@@ -7,3 +7,7 @@
 
 # VS Code
 .vscode/
+
+# Python
+__pycache__/
+.python-version
