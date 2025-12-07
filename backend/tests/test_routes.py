@@ -1,7 +1,7 @@
 import datetime
 from fastapi.testclient import TestClient
 
-from app.main import app
+from src.prayer_times.main import app
 
 
 def test_get_prayer_times():
