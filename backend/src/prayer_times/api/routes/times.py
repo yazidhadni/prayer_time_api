@@ -7,13 +7,27 @@ from src.prayer_times.schemas import PrayerTimes
 router = APIRouter()
 
 
-@router.get("/times", response_model=PrayerTimes)
+@router.get("", response_model=PrayerTimes)
 async def get_prayer_time(
     request: Request, date: datetime.date, city: str, country: str
 ) -> PrayerTimes:
     try:
         return await fetch_prayer_times(
             client=request.app.state.client, date=date, city=city, country=country
+        )
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+
+@router.get("/today", response_model=PrayerTimes)
+async def get_today_prayer_time(
+    request: Request, city: str, country: str
+) -> PrayerTimes:
+    """Return prayer times for today."""
+    today = datetime.date.today()
+    try:
+        return await fetch_prayer_times(
+            client=request.app.state.client, date=today, city=city, country=country
         )
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))

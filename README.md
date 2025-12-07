@@ -10,7 +10,7 @@ This project demonstrates how to interact with external APIs, implement caching,
 - Configure API keys and settings using environment variables [**TODO**]
 
 ### Prerequisites
-- python > 3.13
+- python >= 3.13
 - uv
 
 #### Backend
@@ -21,5 +21,5 @@ uv sync
 ```
 
 ### Running the app locally
-uvicorn app.main:app --reload
+uvicorn src.prayer_times.main:app --reload
 **note:** --reload: automatically reloads the server when you change code, which is perfect for development.
