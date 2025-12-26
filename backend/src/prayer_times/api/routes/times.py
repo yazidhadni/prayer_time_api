@@ -12,13 +12,14 @@ async def get_prayer_time(
     request: Request, date: datetime.date, city: str, country: str
 ) -> PrayerTimes:
     try:
-        return await prayer_time_service.get_prayer_times(
+        prayers = await prayer_time_service.get_prayer_times(
             client=request.app.state.client,
             redis=request.app.state.redis,
             date=date,
             city=city,
             country=country,
         )
+        return prayers.prayer_times
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))
 
@@ -30,12 +31,13 @@ async def get_today_prayer_time(
     """Return prayer times for today."""
     today = datetime.date.today()
     try:
-        return await prayer_time_service.get_prayer_times(
+        prayers = await prayer_time_service.get_prayer_times(
             client=request.app.state.client,
             redis=request.app.state.redis,
             date=today,
             city=city,
             country=country,
         )
+        return prayers.prayer_times
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))

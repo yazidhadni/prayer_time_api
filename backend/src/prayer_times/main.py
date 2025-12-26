@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     yield
 
     await app.state.client.aclose()
-    await app.state.redis.close()
+    await app.state.redis.aclose()
 
 
 app = FastAPI(lifespan=lifespan)

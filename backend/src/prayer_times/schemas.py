@@ -7,3 +7,8 @@ class PrayerTimes(pydantic.BaseModel):
     Asr: str
     Maghrib: str
     Isha: str
+
+
+class PrayerDay(pydantic.BaseModel):
+    prayer_times: PrayerTimes
+    date: str  # date in ISO format
