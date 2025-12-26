@@ -1,7 +1,7 @@
 import datetime
 from fastapi import APIRouter, HTTPException, Request
 
-from src.prayer_times.services.prayer_time_service import fetch_prayer_times
+from src.prayer_times.services import prayer_time_service
 from src.prayer_times.schemas import PrayerTimes
 
 router = APIRouter()
@@ -12,8 +12,12 @@ async def get_prayer_time(
     request: Request, date: datetime.date, city: str, country: str
 ) -> PrayerTimes:
     try:
-        return await fetch_prayer_times(
-            client=request.app.state.client, date=date, city=city, country=country
+        return await prayer_time_service.get_prayer_times(
+            client=request.app.state.client,
+            redis=request.app.state.redis,
+            date=date,
+            city=city,
+            country=country,
         )
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))
@@ -26,8 +30,12 @@ async def get_today_prayer_time(
     """Return prayer times for today."""
     today = datetime.date.today()
     try:
-        return await fetch_prayer_times(
-            client=request.app.state.client, date=today, city=city, country=country
+        return await prayer_time_service.get_prayer_times(
+            client=request.app.state.client,
+            redis=request.app.state.redis,
+            date=today,
+            city=city,
+            country=country,
         )
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e))

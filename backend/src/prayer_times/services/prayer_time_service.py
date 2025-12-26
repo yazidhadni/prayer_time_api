@@ -2,13 +2,20 @@ import datetime
 import httpx
 import logging
 
+from redis import Redis
+
 from src.prayer_times.schemas import PrayerTimes
 
 logger = logging.getLogger(__name__)
 BASE_URL = "https://api.aladhan.com/v1"
+CACHE_TTL_SECONDS = 60 * 60  # 1 hour
 
 
-async def fetch_prayer_times(
+def _get_cache_key(country: str, city: str, date: datetime.date):
+    return f"prayer_times:{country.lower()}:{city.lower()}:{date.isoformat()}"
+
+
+async def _fetch_prayer_times_api(
     client: httpx.AsyncClient, date: datetime.date, city: str, country: str
 ) -> PrayerTimes:
     date_str = date.strftime("%d-%m-%Y")
@@ -29,3 +36,29 @@ async def fetch_prayer_times(
     except Exception as e:
         logger.exception("Failed to parse prayer times")
         raise RuntimeError("Invalid response from external API")
+
+
+async def get_prayer_times(
+    *,
+    client: httpx.AsyncClient,
+    redis: Redis,
+    date: datetime.date,
+    city: str,
+    country: str,
+) -> PrayerTimes:
+    cache_key = _get_cache_key(country=country, city=city, date=date)
+    cached = await redis.get(cache_key)
+    if cached:
+        return PrayerTimes.model_validate_json(cached)
+
+    try:
+        prayer_times: PrayerTimes = await _fetch_prayer_times_api(
+            client=client, date=date, city=city, country=country
+        )
+    except httpx.HTTPError as e:
+        logger.exception("External API call failed")
+        raise RuntimeError("External API request failed") from e
+
+    await redis.set(cache_key, prayer_times.model_dump_json(), ex=CACHE_TTL_SECONDS)
+
+    return prayer_times
