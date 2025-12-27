@@ -1,3 +1,5 @@
+import datetime
+
 import pydantic
 
 
@@ -11,4 +13,4 @@ class PrayerTimes(pydantic.BaseModel):
 
 class PrayerDay(pydantic.BaseModel):
     prayer_times: PrayerTimes
-    date: str  # date in ISO format
+    date: datetime.date

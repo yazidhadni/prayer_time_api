@@ -32,8 +32,8 @@ async def _fetch_prayer_times_api(
     try:
         data = response.json()
         timings = data["data"]["timings"]
-        prayers = PrayerTimes(**timings)
-        return PrayerDay(prayer_times=prayers, date=date.isoformat())
+        prayers_times = PrayerTimes(**timings)
+        return PrayerDay(prayer_times=prayers_times, date=date)
     except Exception as e:
         logger.exception("Failed to parse prayer times")
         raise RuntimeError("Invalid response from external API")
