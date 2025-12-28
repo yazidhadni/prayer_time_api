@@ -15,8 +15,7 @@ from .core.rate_limit import limiter
 async def lifespan(app: FastAPI):
     app.state.client = httpx.AsyncClient(timeout=settings.http_timeout)
     app.state.redis = Redis(
-        host=settings.redis_host,
-        port=settings.redis_port,
+        host=settings.redis_host, port=settings.redis_port, db=settings.redis_db
     )
 
     await app.state.redis.ping()
