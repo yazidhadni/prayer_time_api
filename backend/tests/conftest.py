@@ -6,8 +6,8 @@ os.environ["REDIS_DB"] = "1"
 from fastapi.testclient import TestClient
 import pytest
 
-from src.prayer_times.core.config import settings
-from src.prayer_times.main import app
+from src.app.core.config import settings
+from src.app.main import app
 
 
 @pytest.fixture

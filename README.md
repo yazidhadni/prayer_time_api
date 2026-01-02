@@ -21,5 +21,5 @@ uv sync
 ```
 
 ### Running the app locally
-uvicorn src.prayer_times.main:app --reload
+uvicorn src.app.main:app --reload
 **note:** --reload: automatically reloads the server when you change code, which is perfect for development.

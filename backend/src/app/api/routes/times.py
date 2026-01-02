@@ -1,13 +1,9 @@
 import datetime
 from fastapi import APIRouter, HTTPException, Request
 
-# from src.prayer_times.core.rate_limit import limiter
-# from src.prayer_times.services import prayer_time_service
-# from src.prayer_times.schemas import PrayerTimes
-
-from app.core.rate_limit import limiter
-from app.services import prayer_time_service
-from app.schemas import PrayerTimes
+from src.app.core.rate_limit import limiter
+from src.app.services import prayer_time_service
+from src.app.schemas import PrayerTimes
 
 
 router = APIRouter()
