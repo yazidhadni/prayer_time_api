@@ -4,7 +4,8 @@ import logging
 
 from redis import Redis
 
-from src.prayer_times.schemas import PrayerTimes, PrayerDay
+# from src.prayer_times.schemas import PrayerTimes, PrayerDay
+from app.schemas import PrayerTimes, PrayerDay
 
 logger = logging.getLogger(__name__)
 BASE_URL = "https://api.aladhan.com/v1"
